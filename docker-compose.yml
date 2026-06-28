@@ -1,0 +1,17 @@
+services:
+  ego-app:
+    build: .
+    container_name: ego
+    restart: always
+    ports:
+      - "8085:8080" # Pakai 8085 biar gak bentrok sama port lain
+    environment:
+      - GIN_MODE=release
+      - TZ=Asia/Jakarta
+      - DATABASE_URL=${DATABASE_URL}
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    external: true

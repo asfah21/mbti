@@ -1,0 +1,390 @@
+{{define "content-quiz"}}
+<section class="quiz-section">
+    <div class="quiz-container">
+        <!-- Quiz App -->
+        <div x-data="quizApp()" x-init="init()" class="quiz-app">
+            <!-- Progress Header -->
+            <div class="quiz-progress-header">
+                <div class="quiz-progress-info">
+                    <span class="quiz-step-label">Pertanyaan</span>
+                    <span class="quiz-step-current" x-text="currentStep + 1"></span>
+                    <span class="quiz-step-total">/ 16</span>
+                </div>
+                <div class="quiz-progress-track">
+                    <div class="quiz-progress-fill" :style="'width:' + ((currentStep + 1) / 16 * 100) + '%'"></div>
+                </div>
+            </div>
+
+            <!-- Questions Step 1-15 -->
+            <template x-for="(q, idx) in questions" :key="idx">
+                <div x-show="currentStep === idx && !loading && !showIdentity"
+                     x-transition:enter="transition ease-out duration-300"
+                     x-transition:enter-start="opacity-0 translate-y-4"
+                     x-transition:enter-end="opacity-100 translate-y-0"
+                     class="quiz-step-content">
+                    
+                    <!-- Question Number -->
+                    <div class="quiz-q-number" x-text="'0' + (idx + 1)"></div>
+                    
+                    <!-- Question Text -->
+                    <h2 class="quiz-question" x-text="q.text"></h2>
+                    
+                    <!-- Options: 4-point Likert scale (no neutral) -->
+                    <div class="quiz-options">
+                        <template x-for="(opt, oidx) in q.options" :key="oidx">
+                            <button type="button"
+                                    class="quiz-option"
+                                    :class="{ 'is-selected': answers[idx] === opt.value }"
+                                    @click="answers[idx] = opt.value; setTimeout(() => nextStep(), 300)">
+                                <span class="quiz-option-marker">
+                                    <span x-text="['1', '2', '3', '4'][oidx]"></span>
+                                </span>
+                                <span class="quiz-option-label" x-text="opt.label"></span>
+                                <span class="quiz-option-check" x-show="answers[idx] === opt.value">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                </span>
+                            </button>
+                        </template>
+                    </div>
+
+                    <!-- Navigation -->
+                    <div class="quiz-nav">
+                        <button x-show="idx > 0"
+                                @click="currentStep--"
+                                class="quiz-btn quiz-btn-ghost">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="15 18 9 12 15 6"></polyline>
+                            </svg>
+                            Kembali
+                        </button>
+                        <div x-show="idx === 0"></div>
+                        <button @click="nextStep()"
+                                :disabled="!answers[idx]"
+                                class="quiz-btn quiz-btn-primary"
+                                :class="{ 'is-disabled': !answers[idx] }">
+                            <template x-if="idx < questions.length - 1">
+                                <span class="quiz-btn-inner">
+                                    Lanjut
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="9 18 15 12 9 6"></polyline>
+                                    </svg>
+                                </span>
+                            </template>
+                            <template x-if="idx === questions.length - 1">
+                                <span class="quiz-btn-inner">
+                                    Lanjut
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="9 18 15 12 9 6"></polyline>
+                                    </svg>
+                                </span>
+                            </template>
+                        </button>
+                    </div>
+                </div>
+            </template>
+
+            <!-- Identity Step -->
+            <div x-show="showIdentity && !loading"
+                 x-transition:enter="transition ease-out duration-300"
+                 x-transition:enter-start="opacity-0 translate-y-4"
+                 x-transition:enter-end="opacity-100 translate-y-0"
+                 class="quiz-step-content">
+                
+                <div class="quiz-q-number">16</div>
+                <h2 class="quiz-question">Siapa nama kamu?</h2>
+                <p class="quiz-question-sub">Langkah terakhir — isi data diri untuk melihat hasil asesmen.</p>
+
+                <form id="quizForm" @submit.prevent="submitQuiz()" class="quiz-form">
+                    <div class="quiz-field">
+                        <label class="quiz-field-label" for="nama">Nama Lengkap</label>
+                        <input type="text" id="nama" name="nama" required
+                               placeholder="Masukkan nama kamu"
+                               class="quiz-input"
+                               x-model="nama">
+                    </div>
+                    <div class="quiz-field">
+                        <label class="quiz-field-label" for="email">Email</label>
+                        <input type="email" id="email" name="email" required
+                               placeholder="contoh@email.com"
+                               class="quiz-input"
+                               x-model="email">
+                    </div>
+                    <div class="quiz-form-actions">
+                        <button type="button"
+                                @click="showIdentity = false; currentStep = questions.length - 1"
+                                class="quiz-btn quiz-btn-ghost">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="15 18 9 12 15 6"></polyline>
+                            </svg>
+                            Kembali
+                        </button>
+                        <button type="submit" class="quiz-btn quiz-btn-primary quiz-btn-submit">
+                            <span class="quiz-btn-inner">
+                                Kirim Jawaban
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="9 18 15 12 9 6"></polyline>
+                                </svg>
+                            </span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Loading State -->
+            <div x-show="loading"
+                 x-transition:enter="transition ease-out duration-300"
+                 class="quiz-loading">
+                <div class="quiz-loading-card">
+                    <div class="quiz-loading-dots">
+                        <span class="quiz-loading-dot"></span>
+                        <span class="quiz-loading-dot"></span>
+                        <span class="quiz-loading-dot"></span>
+                    </div>
+                    <p class="quiz-loading-text">Memproses jawaban...</p>
+                    <div class="quiz-loading-bar">
+                        <div class="quiz-loading-fill"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+function quizApp() {
+    return {
+        currentStep: 0,
+        answers: Array(15).fill(null),
+        nama: '',
+        email: '',
+        loading: false,
+        showIdentity: false,
+        questions: [
+            // === NARCISSISM (5 items: q1, q4, q7, q10, q13) ===
+            // q1: direct, q4: reverse, q7: direct, q10: direct, q13: reverse
+            {
+                id: 1, trait: 'narcissism', reverse: false,
+                text: 'Saya merasa kecewa jika pasangan tidak memberikan perhatian seperti yang saya harapkan.',
+                options: [
+                    { value: 1, label: 'Sangat Tidak Sesuai' },
+                    { value: 2, label: 'Kurang Sesuai' },
+                    { value: 3, label: 'Cukup Sesuai' },
+                    { value: 4, label: 'Sangat Sesuai' }
+                ]
+            },
+            // === MACHIAVELLIANISM (5 items: q2, q5, q8, q11, q14) ===
+            // q2: direct, q5: reverse, q8: direct, q11: direct, q14: reverse
+            {
+                id: 2, trait: 'machiavellian', reverse: false,
+                text: 'Saat terjadi konflik, saya lebih fokus mencari cara agar situasi menguntungkan saya.',
+                options: [
+                    { value: 1, label: 'Sangat Tidak Sesuai' },
+                    { value: 2, label: 'Kurang Sesuai' },
+                    { value: 3, label: 'Cukup Sesuai' },
+                    { value: 4, label: 'Sangat Sesuai' }
+                ]
+            },
+            // === PSYCHOPATHY (5 items: q3, q6, q9, q12, q15) ===
+            // q3: direct, q6: reverse, q9: direct, q12: direct, q15: reverse
+            {
+                id: 3, trait: 'psychopathy', reverse: false,
+                text: 'Saya terkadang membuat keputusan saat emosi tanpa terlalu memikirkan dampak jangka panjang.',
+                options: [
+                    { value: 1, label: 'Sangat Tidak Sesuai' },
+                    { value: 2, label: 'Kurang Sesuai' },
+                    { value: 3, label: 'Cukup Sesuai' },
+                    { value: 4, label: 'Sangat Sesuai' }
+                ]
+            },
+            // === NARCISSISM (reverse) ===
+            {
+                id: 4, trait: 'narcissism', reverse: true,
+                text: 'Saya tidak masalah jika pasangan lebih sukses dan lebih dikenal daripada saya.',
+                options: [
+                    { value: 1, label: 'Sangat Tidak Sesuai' },
+                    { value: 2, label: 'Kurang Sesuai' },
+                    { value: 3, label: 'Cukup Sesuai' },
+                    { value: 4, label: 'Sangat Sesuai' }
+                ]
+            },
+            // === MACHIAVELLIANISM (reverse) ===
+            {
+                id: 5, trait: 'machiavellian', reverse: true,
+                text: 'Saya lebih suka bersikap terus terang kepada pasangan meskipun itu bisa merugikan saya.',
+                options: [
+                    { value: 1, label: 'Sangat Tidak Sesuai' },
+                    { value: 2, label: 'Kurang Sesuai' },
+                    { value: 3, label: 'Cukup Sesuai' },
+                    { value: 4, label: 'Sangat Sesuai' }
+                ]
+            },
+            // === PSYCHOPATHY (reverse) ===
+            {
+                id: 6, trait: 'psychopathy', reverse: true,
+                text: 'Saya selalu mempertimbangkan perasaan pasangan sebelum mengambil keputusan penting.',
+                options: [
+                    { value: 1, label: 'Sangat Tidak Sesuai' },
+                    { value: 2, label: 'Kurang Sesuai' },
+                    { value: 3, label: 'Cukup Sesuai' },
+                    { value: 4, label: 'Sangat Sesuai' }
+                ]
+            },
+            // === NARCISSISM ===
+            {
+                id: 7, trait: 'narcissism', reverse: false,
+                text: 'Saya merasa hubungan berjalan lebih baik ketika saya memiliki kendali atas keputusan penting.',
+                options: [
+                    { value: 1, label: 'Sangat Tidak Sesuai' },
+                    { value: 2, label: 'Kurang Sesuai' },
+                    { value: 3, label: 'Cukup Sesuai' },
+                    { value: 4, label: 'Sangat Sesuai' }
+                ]
+            },
+            // === MACHIAVELLIANISM ===
+            {
+                id: 8, trait: 'machiavellian', reverse: false,
+                text: 'Saya bisa sangat memikat ketika menginginkan sesuatu dari pasangan.',
+                options: [
+                    { value: 1, label: 'Sangat Tidak Sesuai' },
+                    { value: 2, label: 'Kurang Sesuai' },
+                    { value: 3, label: 'Cukup Sesuai' },
+                    { value: 4, label: 'Sangat Sesuai' }
+                ]
+            },
+            // === PSYCHOPATHY ===
+            {
+                id: 9, trait: 'psychopathy', reverse: false,
+                text: 'Saya mudah bosan dalam hubungan yang terlalu stabil dan tidak ada kejutan.',
+                options: [
+                    { value: 1, label: 'Sangat Tidak Sesuai' },
+                    { value: 2, label: 'Kurang Sesuai' },
+                    { value: 3, label: 'Cukup Sesuai' },
+                    { value: 4, label: 'Sangat Sesuai' }
+                ]
+            },
+            // === NARCISSISM ===
+            {
+                id: 10, trait: 'narcissism', reverse: false,
+                text: 'Saya berharap pasangan selalu mengakui pencapaian saya, sekecil apa pun itu.',
+                options: [
+                    { value: 1, label: 'Sangat Tidak Sesuai' },
+                    { value: 2, label: 'Kurang Sesuai' },
+                    { value: 3, label: 'Cukup Sesuai' },
+                    { value: 4, label: 'Sangat Sesuai' }
+                ]
+            },
+            // === MACHIAVELLIANISM ===
+            {
+                id: 11, trait: 'machiavellian', reverse: false,
+                text: 'Saya kadang menyembunyikan perasaan sesungguhnya agar hubungan tetap berjalan sesuai keinginan saya.',
+                options: [
+                    { value: 1, label: 'Sangat Tidak Sesuai' },
+                    { value: 2, label: 'Kurang Sesuai' },
+                    { value: 3, label: 'Cukup Sesuai' },
+                    { value: 4, label: 'Sangat Sesuai' }
+                ]
+            },
+            // === PSYCHOPATHY ===
+            {
+                id: 12, trait: 'psychopathy', reverse: false,
+                text: 'Saya cenderung menarik diri secara emosional saat pasangan terlalu bergantung pada saya.',
+                options: [
+                    { value: 1, label: 'Sangat Tidak Sesuai' },
+                    { value: 2, label: 'Kurang Sesuai' },
+                    { value: 3, label: 'Cukup Sesuai' },
+                    { value: 4, label: 'Sangat Sesuai' }
+                ]
+            },
+            // === NARCISSISM (reverse) ===
+            {
+                id: 13, trait: 'narcissism', reverse: true,
+                text: 'Saya merasa nyaman saat pasangan menjadi pusat perhatian di lingkungan sosial kita.',
+                options: [
+                    { value: 1, label: 'Sangat Tidak Sesuai' },
+                    { value: 2, label: 'Kurang Sesuai' },
+                    { value: 3, label: 'Cukup Sesuai' },
+                    { value: 4, label: 'Sangat Sesuai' }
+                ]
+            },
+            // === MACHIAVELLIANISM (reverse) ===
+            {
+                id: 14, trait: 'machiavellian', reverse: true,
+                text: 'Saya percaya bahwa kejujuran adalah fondasi utama dalam hubungan, apa pun risikonya.',
+                options: [
+                    { value: 1, label: 'Sangat Tidak Sesuai' },
+                    { value: 2, label: 'Kurang Sesuai' },
+                    { value: 3, label: 'Cukup Sesuai' },
+                    { value: 4, label: 'Sangat Sesuai' }
+                ]
+            },
+            // === PSYCHOPATHY (reverse) ===
+            {
+                id: 15, trait: 'psychopathy', reverse: true,
+                text: 'Saya merasa bersalah jika tindakan saya menyakiti perasaan pasangan.',
+                options: [
+                    { value: 1, label: 'Sangat Tidak Sesuai' },
+                    { value: 2, label: 'Kurang Sesuai' },
+                    { value: 3, label: 'Cukup Sesuai' },
+                    { value: 4, label: 'Sangat Sesuai' }
+                ]
+            }
+        ],
+        init() {
+            const saved = localStorage.getItem('quizState');
+            if (saved) {
+                try {
+                    const state = JSON.parse(saved);
+                    this.answers = state.answers || Array(15).fill(null);
+                    this.currentStep = state.currentStep || 0;
+                    this.nama = state.nama || '';
+                    this.email = state.email || '';
+                } catch(e) {}
+            }
+        },
+        saveState() {
+            localStorage.setItem('quizState', JSON.stringify({
+                answers: this.answers,
+                currentStep: this.currentStep,
+                nama: this.nama,
+                email: this.email
+            }));
+        },
+        nextStep() {
+            if (this.answers[this.currentStep] === null) return;
+            if (this.currentStep < this.questions.length - 1) {
+                this.currentStep++;
+                this.saveState();
+            } else {
+                this.showIdentity = true;
+                this.saveState();
+            }
+        },
+        submitQuiz() {
+            if (!this.nama || !this.email) return;
+            this.loading = true;
+
+            const formData = new FormData();
+            formData.append('nama', this.nama);
+            formData.append('email', this.email);
+            this.answers.forEach((a, i) => formData.append('q' + (i + 1), a));
+
+            fetch('/submit-tes', {
+                method: 'POST',
+                body: formData
+            })
+            .then(r => r.json())
+            .then(data => {
+                localStorage.removeItem('quizState');
+                window.location.href = '/paywall/' + data.id;
+            })
+            .catch(() => {
+                alert('Terjadi kesalahan. Silakan coba lagi.');
+                this.loading = false;
+            });
+        }
+    }
+}
+</script>
+{{end}}

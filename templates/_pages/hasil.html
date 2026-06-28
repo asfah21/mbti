@@ -1,0 +1,315 @@
+{{define "content-hasil"}}
+<section class="min-h-screen pt-24 pb-16 bg-gradient-result">
+    <div class="mx-auto max-w-[768px] px-6 lg:px-8">
+
+        <!-- ═══════════════════════════════════════════════════
+             HEADER
+             ═══════════════════════════════════════════════════ -->
+        <div class="text-center mb-12 fade-in-up">
+            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-[var(--accent-200)] bg-[var(--accent-50)] text-xs font-medium text-[var(--accent-600)] mb-4 transition-all duration-300 hover:shadow-sm">
+                <span class="w-1.5 h-1.5 rounded-full bg-[var(--success)]"></span>
+                Laporan Asesmen
+            </div>
+            <h1 class="text-3xl md:text-4xl font-bold tracking-tight text-[var(--textMain)] m-0">
+                Halo, <span class="text-accent">{{.Nama}}</span>
+            </h1>
+            <p class="mt-3 text-[var(--textMuted)] m-0 max-w-md mx-auto">
+                Berikut adalah laporan hubungan yang dipersonalisasi berdasarkan jawabanmu.
+            </p>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════
+             SCORE OVERVIEW — Compact, supporting role
+             ═══════════════════════════════════════════════════ -->
+        <div class="grid grid-cols-3 gap-3 mb-12 fade-in-up" x-data="{ visible: false }" x-init="setTimeout(() => visible = true, 200)">
+            <div class="card p-4 md:p-5 text-center transition-all duration-300 hover:shadow-md" x-show="visible" x-transition:enter="transition ease-out duration-500" x-transition:enter-start="opacity-0 translate-y-4">
+                <div class="w-8 h-8 rounded-xl bg-[var(--narcissus-light)] flex items-center justify-center mx-auto mb-2">
+                    <span class="material-symbols-outlined text-sm text-[var(--narcissus)]">star</span>
+                </div>
+                <div class="text-xs text-[var(--textSubtle)] mb-1 leading-tight">Validasi<br>Emosional</div>
+                <div class="text-lg font-bold font-mono text-[var(--narcissus)]">{{.Narsisme}}%</div>
+                <div class="progress-bar mt-2">
+                    <div class="progress-fill" style="width:0%;background:var(--narcissus)" data-width="{{.Narsisme}}"></div>
+                </div>
+            </div>
+            <div class="card p-4 md:p-5 text-center transition-all duration-300 hover:shadow-md" x-show="visible" x-transition:enter="transition ease-out duration-500" x-transition:enter-start="opacity-0 translate-y-4" style="animation-delay:0.1s;">
+                <div class="w-8 h-8 rounded-xl bg-[var(--machiavellian-light)] flex items-center justify-center mx-auto mb-2">
+                    <span class="material-symbols-outlined text-sm text-[var(--machiavellian)]">psychology</span>
+                </div>
+                <div class="text-xs text-[var(--textSubtle)] mb-1 leading-tight">Mengarahkan<br>Situasi</div>
+                <div class="text-lg font-bold font-mono text-[var(--machiavellian)]">{{.Machiavellian}}%</div>
+                <div class="progress-bar mt-2">
+                    <div class="progress-fill" style="width:0%;background:var(--machiavellian)" data-width="{{.Machiavellian}}"></div>
+                </div>
+            </div>
+            <div class="card p-4 md:p-5 text-center transition-all duration-300 hover:shadow-md" x-show="visible" x-transition:enter="transition ease-out duration-500" x-transition:enter-start="opacity-0 translate-y-4" style="animation-delay:0.2s;">
+                <div class="w-8 h-8 rounded-xl bg-[var(--psychopath-light)] flex items-center justify-center mx-auto mb-2">
+                    <span class="material-symbols-outlined text-sm text-[var(--psychopath)]">bolt</span>
+                </div>
+                <div class="text-xs text-[var(--textSubtle)] mb-1 leading-tight">Keputusan<br>Impulsif</div>
+                <div class="text-lg font-bold font-mono text-[var(--psychopath)]">{{.Psikopati}}%</div>
+                <div class="progress-bar mt-2">
+                    <div class="progress-fill" style="width:0%;background:var(--psychopath)" data-width="{{.Psikopati}}"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════
+             1. EXECUTIVE SUMMARY
+             ═══════════════════════════════════════════════════ -->
+        <div class="fade-in-up mb-10">
+            <div class="flex items-center gap-3 mb-5">
+                <div class="w-10 h-10 rounded-2xl bg-[var(--accentLight)] flex items-center justify-center">
+                    <span class="material-symbols-outlined text-[var(--accent)]">summarize</span>
+                </div>
+                <div>
+                    <h2 class="text-lg font-bold text-[var(--textMain)] m-0">Ringkasan Eksekutif</h2>
+                    <p class="text-xs text-[var(--textSubtle)] m-0">Gambaran umum dinamika hubunganmu</p>
+                </div>
+            </div>
+            <div class="card card-elevated p-6 md:p-8">
+                <div class="prose prose-sm max-w-none text-[var(--textMuted)] leading-relaxed" style="white-space:pre-line;">
+                    {{.ExecutiveSummary}}
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════
+             2. RELATIONSHIP PROFILE
+             ═══════════════════════════════════════════════════ -->
+        <div class="fade-in-up mb-10">
+            <div class="flex items-center gap-3 mb-5">
+                <div class="w-10 h-10 rounded-2xl bg-[var(--accentLight)] flex items-center justify-center">
+                    <span class="material-symbols-outlined text-[var(--accent)]">person_search</span>
+                </div>
+                <div>
+                    <h2 class="text-lg font-bold text-[var(--textMain)] m-0">Profil Hubungan</h2>
+                    <p class="text-xs text-[var(--textSubtle)] m-0">Bagaimana kamu menjalani hubungan</p>
+                </div>
+            </div>
+            <div class="card card-elevated p-6 md:p-8">
+                <div class="space-y-6">
+                    {{$profile := .RelationshipProfile}}
+                    {{$sections := split $profile "\n\n"}}
+                    {{range $sections}}
+                        {{if .}}
+                        <div>
+                            {{$lines := split . "\n"}}
+                            {{range $i, $line := $lines}}
+                                {{if eq $i 0}}
+                                    <h3 class="text-sm font-bold text-[var(--textMain)] mb-2">{{$line}}</h3>
+                                {{else}}
+                                    <p class="text-sm text-[var(--textMuted)] leading-relaxed m-0">{{$line}}</p>
+                                {{end}}
+                            {{end}}
+                        </div>
+                        {{end}}
+                    {{end}}
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════
+             3. KEKUATAN POTENSIAL
+             ═══════════════════════════════════════════════════ -->
+        <div class="fade-in-up mb-10">
+            <div class="flex items-center gap-3 mb-5">
+                <div class="w-10 h-10 rounded-2xl bg-[var(--psychopath-light)] flex items-center justify-center">
+                    <span class="material-symbols-outlined text-[var(--psychopath)]">emoji_objects</span>
+                </div>
+                <div>
+                    <h2 class="text-lg font-bold text-[var(--textMain)] m-0">Kekuatan Potensial</h2>
+                    <p class="text-xs text-[var(--textSubtle)] m-0">Aspek positif yang bisa kamu kembangkan</p>
+                </div>
+            </div>
+            <div class="space-y-3">
+                {{range $i, $item := .Kekuatan}}
+                <div class="card card-elevated p-5 md:p-6 flex items-start gap-4 transition-all duration-300 hover:shadow-md">
+                    <div class="w-8 h-8 rounded-full bg-[var(--psychopath-light)] flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <span class="material-symbols-outlined text-sm text-[var(--psychopath)]">check</span>
+                    </div>
+                    <p class="text-sm text-[var(--textMuted)] leading-relaxed m-0">{{$item}}</p>
+                </div>
+                {{end}}
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════
+             4. AREA YANG PERLU DIPERHATIKAN
+             ═══════════════════════════════════════════════════ -->
+        <div class="fade-in-up mb-10">
+            <div class="flex items-center gap-3 mb-5">
+                <div class="w-10 h-10 rounded-2xl bg-[var(--machiavellian-light)] flex items-center justify-center">
+                    <span class="material-symbols-outlined text-[var(--machiavellian)]">trending_up</span>
+                </div>
+                <div>
+                    <h2 class="text-lg font-bold text-[var(--textMain)] m-0">Area yang Perlu Diperhatikan</h2>
+                    <p class="text-xs text-[var(--textSubtle)] m-0">Peluang untuk tumbuh dan berkembang</p>
+                </div>
+            </div>
+            <div class="space-y-3">
+                {{range $i, $item := .AreaPerhatian}}
+                <div class="card card-elevated p-5 md:p-6 flex items-start gap-4 transition-all duration-300 hover:shadow-md">
+                    <div class="w-8 h-8 rounded-full bg-[var(--machiavellian-light)] flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <span class="material-symbols-outlined text-sm text-[var(--machiavellian)]">lightbulb</span>
+                    </div>
+                    <p class="text-sm text-[var(--textMuted)] leading-relaxed m-0">{{$item}}</p>
+                </div>
+                {{end}}
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════
+             5. RELATIONSHIP INSIGHT
+             ═══════════════════════════════════════════════════ -->
+        <div class="fade-in-up mb-10">
+            <div class="flex items-center gap-3 mb-5">
+                <div class="w-10 h-10 rounded-2xl bg-[var(--narcissus-light)] flex items-center justify-center">
+                    <span class="material-symbols-outlined text-[var(--narcissus)]">psychology</span>
+                </div>
+                <div>
+                    <h2 class="text-lg font-bold text-[var(--textMain)] m-0">Relationship Insight</h2>
+                    <p class="text-xs text-[var(--textSubtle)] m-0">Pola mendalam berdasarkan kombinasi skormu</p>
+                </div>
+            </div>
+            <div class="card card-elevated p-6 md:p-8" style="background:linear-gradient(135deg, var(--accentLight) 0%, var(--surface) 100%);border-color:var(--accentBorder);">
+                <div class="flex items-start gap-4">
+                    <div class="w-12 h-12 rounded-2xl bg-[var(--accent-100)] flex items-center justify-center flex-shrink-0">
+                        <span class="material-symbols-outlined text-2xl text-[var(--accent-500)]">auto_awesome</span>
+                    </div>
+                    <div class="text-sm text-[var(--textMuted)] leading-relaxed" style="white-space:pre-line;">
+                        {{.RelationshipInsight}}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════
+             6. COMPATIBILITY NOTES
+             ═══════════════════════════════════════════════════ -->
+        <div class="fade-in-up mb-10">
+            <div class="flex items-center gap-3 mb-5">
+                <div class="w-10 h-10 rounded-2xl bg-[var(--accentLight)] flex items-center justify-center">
+                    <span class="material-symbols-outlined text-[var(--accent)]">group</span>
+                </div>
+                <div>
+                    <h2 class="text-lg font-bold text-[var(--textMain)] m-0">Catatan Kompatibilitas</h2>
+                    <p class="text-xs text-[var(--textSubtle)] m-0">Tipe pasangan dan dinamika yang cocok</p>
+                </div>
+            </div>
+            <div class="card card-elevated p-6 md:p-8">
+                <div class="text-sm text-[var(--textMuted)] leading-relaxed" style="white-space:pre-line;">
+                    {{.CompatibilityNotes}}
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════
+             7. REFLECTION QUESTIONS
+             ═══════════════════════════════════════════════════ -->
+        <div class="fade-in-up mb-10">
+            <div class="flex items-center gap-3 mb-5">
+                <div class="w-10 h-10 rounded-2xl bg-[var(--accentLight)] flex items-center justify-center">
+                    <span class="material-symbols-outlined text-[var(--accent)]">question_answer</span>
+                </div>
+                <div>
+                    <h2 class="text-lg font-bold text-[var(--textMain)] m-0">Pertanyaan Refleksi</h2>
+                    <p class="text-xs text-[var(--textSubtle)] m-0">Luangkan waktu untuk merenung</p>
+                </div>
+            </div>
+            <div class="space-y-4">
+                {{range $i, $q := .ReflectionQuestions}}
+                <div class="card card-elevated p-5 md:p-6 transition-all duration-300 hover:shadow-md">
+                    <div class="flex items-start gap-4">
+                        <div class="w-8 h-8 rounded-full bg-[var(--accentLight)] flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <span class="text-sm font-bold text-[var(--accent)] font-mono">{{add $i 1}}</span>
+                        </div>
+                        <p class="text-sm text-[var(--textMuted)] leading-relaxed m-0 italic">"{{$q}}"</p>
+                    </div>
+                </div>
+                {{end}}
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════
+             CLOSING NOTE
+             ═══════════════════════════════════════════════════ -->
+        <div class="fade-in-up mb-10 p-6 rounded-2xl text-center" style="background:var(--accentLight);border:1px solid var(--accentBorder);">
+            <p class="text-sm text-[var(--textMuted)] leading-relaxed m-0 max-w-md mx-auto">
+                Ingatlah bahwa asesmen ini hanyalah salah satu sudut pandang. 
+                Kamu jauh lebih kompleks dari angka-angka di atas. 
+                Gunakan wawasan ini sebagai alat untuk bertumbuh, bukan sebagai kotak yang membatasimu.
+            </p>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════
+             ACTIONS
+             ═══════════════════════════════════════════════════ -->
+        <div class="flex flex-wrap gap-3 mt-8 justify-center no-print">
+            <button onclick="window.print()" class="btn-secondary transition-all duration-200">
+                <span class="material-symbols-outlined text-lg">print</span>
+                Cetak Laporan
+            </button>
+            <a href="/" class="btn-ghost transition-all duration-200">
+                <span class="material-symbols-outlined text-lg">home</span>
+                Kembali ke Beranda
+            </a>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════
+             UPSELL
+             ═══════════════════════════════════════════════════ -->
+        <div class="mt-12 space-y-4 no-print">
+            <div class="card card-elevated p-6 md:p-8" style="background:var(--accentLight);border-color:var(--accentBorder);">
+                <div class="flex items-start gap-4">
+                    <div class="w-12 h-12 rounded-2xl bg-[var(--accent-100)] flex items-center justify-center flex-shrink-0">
+                        <span class="material-symbols-outlined text-2xl text-[var(--accent-500)]">support_agent</span>
+                    </div>
+                    <div>
+                        <h4 class="text-base font-bold text-[var(--textMain)] m-0">Konsultasi dengan Psikolog</h4>
+                        <p class="mt-1 text-sm text-[var(--textMuted)] leading-relaxed m-0">
+                            Ingin memahami hasil ini lebih dalam? Jadwalkan sesi konsultasi
+                            dengan psikolog profesional kami.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card card-hover p-6 md:p-8 transition-all duration-300">
+                <div class="flex items-start gap-4">
+                    <div class="w-12 h-12 rounded-2xl bg-[var(--bgAlt)] flex items-center justify-center flex-shrink-0">
+                        <span class="material-symbols-outlined text-2xl text-[var(--textMuted)]">menu_book</span>
+                    </div>
+                    <div>
+                        <h4 class="text-base font-bold text-[var(--textMain)] m-0">Panduan Pengembangan Diri</h4>
+                        <p class="mt-1 text-sm text-[var(--textMuted)] leading-relaxed m-0">
+                            Dapatkan ebook panduan lengkap untuk mengelola setiap dimensi
+                            Dark Triad dalam kehidupan sehari-hari.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Emergency -->
+        <div class="mt-8 p-4 rounded-2xl bg-[var(--machiavellian-light)] border border-[var(--accentBorder)] text-center no-print transition-all duration-300 hover:shadow-sm">
+            <p class="text-xs text-[var(--machiavellian)] m-0 leading-relaxed">
+                <strong>Butuh bantuan?</strong> Jika kamu merasa kewalahan, hubungi
+                hotline kesehatan mental di <strong>119</strong> (ekstensi 8) atau
+                <strong>021-500-454</strong>.
+            </p>
+        </div>
+    </div>
+</section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Animate progress bars
+    setTimeout(function() {
+        document.querySelectorAll('.progress-fill').forEach(function(el) {
+            el.style.width = el.dataset.width + '%';
+        });
+    }, 400);
+});
+</script>
+{{end}}
