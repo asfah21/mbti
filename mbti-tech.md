@@ -1742,100 +1742,126 @@ INFJ memiliki pola pemutusan hubungan yang dikenal sebagai "door slam"—ketika 
 
 ### 9.2 Deteksi Straight-Line Responding
 
-```typescript
-function detectStraightLine(responses: QuestionResponse[]): boolean {
-  // Cek apakah semua jawaban identik atau variance sangat rendah
-  const values = responses
-    .filter(r => typeof r.answer_value === 'number')
-    .map(r => r.answer_value as number);
-  
-  if (values.length === 0) return false;
-  
-  const uniqueValues = new Set(values);
-  const maxVariance = 0.5; // Threshold variance minimum
-  
-  if (uniqueValues.size <= 2) {
-    // Semua jawaban hanya 1-2 nilai berbeda
-    const mean = values.reduce((a, b) => a + b, 0) / values.length;
-    const variance = values.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / values.length;
-    return variance <= maxVariance;
-  }
-  
-  return false;
+```go
+// DetectStraightLine memeriksa apakah semua jawaban identik atau variance sangat rendah.
+func DetectStraightLine(responses []QuestionResponse) bool {
+	var values []float64
+	for _, r := range responses {
+		values = append(values, r.AnswerValue)
+	}
+
+	if len(values) == 0 {
+		return false
+	}
+
+	uniqueValues := make(map[float64]bool)
+	for _, v := range values {
+		uniqueValues[v] = true
+	}
+
+	maxVariance := 0.5 // Threshold variance minimum
+
+	if len(uniqueValues) <= 2 {
+		// Semua jawaban hanya 1-2 nilai berbeda
+		var sum float64
+		for _, v := range values {
+			sum += v
+		}
+		mean := sum / float64(len(values))
+
+		var varianceSum float64
+		for _, v := range values {
+			diff := v - mean
+			varianceSum += diff * diff
+		}
+		variance := varianceSum / float64(len(values))
+		return variance <= maxVariance
+	}
+
+	return false
 }
 ```
 
 ### 9.3 Skema Confidence Score
 
-```typescript
-interface ConfidenceScore {
-  overall: number;           // 0-100
-  per_dikotomi: {
-    EI: number;
-    SN: number;
-    TF: number;
-    JP: number;
-  };
-  flags: string[];           // Array peringatan
-  recommendation: "reliable" | "review_suggested" | "retest_recommended";
+```go
+// ConfidenceScore menyimpan skor kepercayaan hasil tes MBTI.
+type ConfidenceScore struct {
+	Overall       float64           `json:"overall"`        // 0-100
+	PerDikotomi   map[string]float64 `json:"per_dikotomi"`  // PCI per dikotomi
+	Flags         []string          `json:"flags"`          // Array peringatan
+	Recommendation string           `json:"recommendation"` // "reliable" | "review_suggested" | "retest_recommended"
 }
 
-function calculateConfidence(result: MBTIResult): ConfidenceScore {
-  const flags: string[] = [];
-  let confidence = 100;
-  
-  // Penalti per dikotomi jika ambiguous
-  const dikotomi_scores = [
-    result.scores.EI.pci,
-    result.scores.SN.pci,
-    result.scores.TF.pci,
-    result.scores.JP.pci,
-  ];
-  
-  for (const pci of dikotomi_scores) {
-    if (pci < 5) { confidence -= 25; flags.push("near_zero_preference"); }
-    else if (pci < 15) { confidence -= 10; flags.push("slight_preference"); }
-  }
-  
-  // Penalti inkonsistensi
-  if (result.reliability_indicators.inconsistency_score > 50) {
-    confidence -= 30;
-    flags.push("high_inconsistency");
-  } else if (result.reliability_indicators.inconsistency_score > 30) {
-    confidence -= 15;
-    flags.push("moderate_inconsistency");
-  }
-  
-  // Penalti completion rate
-  if (result.reliability_indicators.completion_rate < 90) {
-    confidence -= 20;
-    flags.push("incomplete_responses");
-  }
-  
-  // Penalti response time
-  if (result.reliability_indicators.avg_response_ms < 1500) {
-    confidence -= 20;
-    flags.push("responses_too_fast");
-  }
-  
-  confidence = Math.max(0, confidence);
-  
-  let recommendation: ConfidenceScore["recommendation"];
-  if (confidence >= 70) recommendation = "reliable";
-  else if (confidence >= 40) recommendation = "review_suggested";
-  else recommendation = "retest_recommended";
-  
-  return {
-    overall: confidence,
-    per_dikotomi: {
-      EI: result.scores.EI.pci,
-      SN: result.scores.SN.pci,
-      TF: result.scores.TF.pci,
-      JP: result.scores.JP.pci,
-    },
-    flags,
-    recommendation,
-  };
+// CalculateConfidence menghitung skor kepercayaan dari hasil MBTI.
+func CalculateConfidence(result MBTIResult) ConfidenceScore {
+	flags := []string{}
+	confidence := 100.0
+
+	// Penalti per dikotomi jika ambiguous
+	dikotomiScores := []float64{
+		result.Scores["EI"].PCI,
+		result.Scores["SN"].PCI,
+		result.Scores["TF"].PCI,
+		result.Scores["JP"].PCI,
+	}
+
+	for _, pci := range dikotomiScores {
+		if pci < 5 {
+			confidence -= 25
+			flags = append(flags, "near_zero_preference")
+		} else if pci < 15 {
+			confidence -= 10
+			flags = append(flags, "slight_preference")
+		}
+	}
+
+	// Penalti inkonsistensi
+	if result.ReliabilityIndicators.InconsistencyScore > 50 {
+		confidence -= 30
+		flags = append(flags, "high_inconsistency")
+	} else if result.ReliabilityIndicators.InconsistencyScore > 30 {
+		confidence -= 15
+		flags = append(flags, "moderate_inconsistency")
+	}
+
+	// Penalti completion rate
+	if result.ReliabilityIndicators.CompletionRate < 90 {
+		confidence -= 20
+		flags = append(flags, "incomplete_responses")
+	}
+
+	// Penalti response time
+	if result.ReliabilityIndicators.AvgResponseTimeMs < 1500 {
+		confidence -= 20
+		flags = append(flags, "responses_too_fast")
+	}
+
+	if confidence < 0 {
+		confidence = 0
+	}
+
+	var recommendation string
+	switch {
+	case confidence >= 70:
+		recommendation = "reliable"
+	case confidence >= 40:
+		recommendation = "review_suggested"
+	default:
+		recommendation = "retest_recommended"
+	}
+
+	return ConfidenceScore{
+		Overall: confidence,
+		PerDikotomi: map[string]float64{
+			"EI": result.Scores["EI"].PCI,
+			"SN": result.Scores["SN"].PCI,
+			"TF": result.Scores["TF"].PCI,
+			"JP": result.Scores["JP"].PCI,
+		},
+		Flags:         flags,
+		Recommendation: recommendation,
+	}
 }
 ```
 
@@ -2022,7 +2048,7 @@ FASE 2: CORE ALGORITHM
 □ Implementasi strength classification (slight/moderate/clear/very_clear)
 
 FASE 3: QUESTION BANK
-□ Buat minimal 60 soal dengan distribusi sesuai Bagian 4.3
+□ Buat minimal 20 soal dengan distribusi sesuai Bagian 4.3
 □ Tag setiap soal dengan metadata lengkap (Bagian 4.4)
 □ Setup anchor pairs untuk inconsistency detection (min. 10 pasang)
 □ Implementasi question randomization dan counterbalancing
@@ -2044,6 +2070,6 @@ FASE 5: OPTIMASI
 
 *Dokumen ini mengikuti teori Jungian original dan format instrumen MBTI standar psikometri. Untuk implementasi klinis, pastikan validasi tambahan oleh psikolog bersertifikat.*
 
-**Versi Dokumen:** 2.0  
-**Terakhir diperbarui:** 2025  
+**Versi Dokumen:** 3.0  
+**Terakhir diperbarui:** 2026
 **Lisensi penggunaan:** Internal Development Use
