@@ -339,17 +339,17 @@ Lebih diskriminatif secara psikometri — responden memilih salah satu dari dua 
 
 ### 4.3 Distribusi Soal yang Direkomendasikan
 
-**Total soal: 60–93 soal** (standar instrument psikometri MBTI)
+**Total soal: 20–25 soal** (versi ringkas untuk retensi pengguna)
 
 | Dikotomi | Jumlah Soal | Distribusi Bobot |
 |----------|-------------|-----------------|
-| E/I | 15–21 | 30% Core, 40% Behavior, 30% Situational |
-| S/N | 18–24 | 35% Core, 35% Behavior, 30% Situational |
-| T/F | 18–24 | 35% Core, 35% Behavior, 30% Situational |
-| J/P | 15–21 | 30% Core, 40% Lifestyle, 30% Situational |
-| **Total** | **66–90** | |
+| E/I | 5–6 | 40% Core, 40% Behavior, 20% Situational |
+| S/N | 6–7 | 40% Core, 40% Behavior, 20% Situational |
+| T/F | 5–6 | 40% Core, 40% Behavior, 20% Situational |
+| J/P | 4–6 | 40% Core, 40% Lifestyle, 20% Situational |
+| **Total** | **20–25** | |
 
-> **Mengapa S/N dan T/F lebih banyak soal?** Kedua dikotomi ini memiliki overlap dengan bias sosial dan gender (T/F khususnya), sehingga butuh lebih banyak item untuk akurasi.
+> **Catatan:** Versi ringkas ini mengutamakan pertanyaan Core Function dan Preference Behavior (bobot tinggi) untuk menjaga akurasi diagnostik tetap optimal meski jumlah soal lebih sedikit. Setiap dikotomi diukur dengan minimal 4 soal untuk reliabilitas statistik yang memadai.
 
 ### 4.4 Matriks Tag Soal
 
@@ -1959,8 +1959,8 @@ func CalculateConfidence(result MBTIResult) ConfidenceScore {
   "meta": {
     "calculated_at": "2025-01-01T12:00:00Z",
     "algorithm_version": "2.0",
-    "total_questions": 60,
-    "questions_answered": 60
+    "total_questions": 20,
+    "questions_answered": 20
   }
 }
 ```
@@ -1985,9 +1985,9 @@ func CalculateConfidence(result MBTIResult) ConfidenceScore {
     "code": "INSUFFICIENT_RESPONSES",
     "message": "Minimal 80% pertanyaan harus dijawab untuk kalkulasi hasil.",
     "details": {
-      "questions_required": 48,
-      "questions_answered": 38,
-      "completion_rate": 63.3
+      "questions_required": 16,
+      "questions_answered": 12,
+      "completion_rate": 60.0
     }
   }
 }

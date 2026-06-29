@@ -14,14 +14,23 @@ func SubmitTest(c *gin.Context) {
 	email := c.PostForm("email")
 	nama := c.PostForm("nama")
 
-	// Baca 15 jawaban dari form
-	answers := make([]int, 15)
-	for i := 1; i <= 15; i++ {
-		val, err := strconv.Atoi(c.PostForm("q" + strconv.Itoa(i)))
+	// Baca 20 jawaban dari form (q_Q_EI_001, q_Q_SN_001, dll.)
+	answers := make(map[string]float64)
+
+	// Daftar ID soal yang dikirim dari frontend
+	questionIDs := []string{
+		"Q_EI_001", "Q_EI_002", "Q_EI_003", "Q_EI_004", "Q_EI_005",
+		"Q_SN_001", "Q_SN_002", "Q_SN_003", "Q_SN_004", "Q_SN_005", "Q_SN_006",
+		"Q_TF_001", "Q_TF_002", "Q_TF_003", "Q_TF_004", "Q_TF_005",
+		"Q_JP_001", "Q_JP_002", "Q_JP_003", "Q_JP_004",
+	}
+
+	for _, qID := range questionIDs {
+		val, err := strconv.ParseFloat(c.PostForm("q_"+qID), 64)
 		if err != nil {
 			val = 0 // default jika tidak terisi
 		}
-		answers[i-1] = val
+		answers[qID] = val
 	}
 
 	userID, err := services.ProcessQuizAnswers(email, nama, answers)
@@ -68,9 +77,13 @@ func ShowResult(c *gin.Context) {
 
 	c.HTML(http.StatusOK, "hasil.html", gin.H{
 		"Nama":                result.Nama,
-		"Narsisme":            result.Narsisme,
-		"Machiavellian":       result.Machiavellian,
-		"Psikopati":           result.Psikopati,
+		"MBTI":                result.MBTI,
+		"SkorEI":              result.SkorEI,
+		"SkorSN":              result.SkorSN,
+		"SkorTF":              result.SkorTF,
+		"SkorJP":              result.SkorJP,
+		"Scores":              result.Scores,
+		"CognitiveStack":      result.CognitiveStack,
 		"ExecutiveSummary":    result.ExecutiveSummary,
 		"RelationshipProfile": result.RelationshipProfile,
 		"Kekuatan":            result.Kekuatan,

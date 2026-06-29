@@ -1,10 +1,10 @@
 services:
-  ego-app:
+  mbti-app:
     build: .
-    container_name: ego
+    container_name: mbti
     restart: always
     ports:
-      - "8085:8080" # Pakai 8085 biar gak bentrok sama port lain
+      - "8086:8080" # Pakai 8086 biar gak bentrok sama port lain
     environment:
       - GIN_MODE=release
       - TZ=Asia/Jakarta

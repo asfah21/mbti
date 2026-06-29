@@ -1,6 +1,6 @@
 ---
-name: ShadowSelf
-description: Dark Triad personality assessment — quiet, honest, introspective
+name: MBTI
+description: MBTI personality assessment — 16 types, 4 dichotomies, Jungian cognitive functions
 colors:
   primary: "#0d7377"
   primary-hover: "#095b5e"
@@ -14,9 +14,10 @@ colors:
   surface: "#FCF9F6"
   bg: "#f0ede8"
   bg-alt: "#e8e4de"
-  narcissus: "#7c3aed"
-  machiavellian: "#d97706"
-  psychopath: "#059669"
+  nt: "#7c3aed"
+  nf: "#d97706"
+  sj: "#059669"
+  sp: "#2563eb"
   success: "#059669"
   warning: "#d97706"
   error: "#dc2626"
@@ -153,21 +154,21 @@ components:
     transition: "width 0.8s ease"
 ---
 
-# Design System: ShadowSelf
+# Design System: MBTI
 
 ## 1. Overview
 
-**Creative North Star: "The Still Mirror"**
+**Creative North Star: "Know Your Architecture"**
 
-ShadowSelf's visual system is a mirror that doesn't flatter
-and doesn't distort — it simply reflects what's there. The
-interface creates space for a difficult conversation, not
-distraction or entertainment. Every pixel serves stillness.
+MBTI's visual system is a mirror for self-discovery — it
+doesn't judge, it reveals. The interface creates space for
+introspection and understanding, not distraction. Every pixel
+serves clarity and psychological depth.
 
 The system is **refined and confident**: modern enough to
 feel premium, restrained enough to feel serious. Subtle
-elevation and glass effects signal quality without
-overwhelming the psychological weight of the content.
+elevation and warm tones signal quality without overwhelming
+the psychological weight of the content.
 
 **Key Characteristics:**
 - Warm off-white base — never pure white or pure black
@@ -205,13 +206,15 @@ signals, separates, and guides — never decorates.
 - **Bg** (#f0ede8): Section alternation, flat card backgrounds.
 - **Bg Alt** (#e8e4de): Deeper alternation, subtle fills.
 
-### Data (Dark Triad)
-- **Narcissus** (#7c3aed): Purple. Narcissism dimension.
-  Score displays and progress bars only.
-- **Machiavellian** (#d97706): Amber. Machiavellianism.
-  Score displays and progress bars only.
-- **Psychopath** (#059669): Emerald. Psychopathy dimension.
-  Score displays and progress bars only.
+### Data (Temperament Groups)
+- **NT** (#7c3aed): Purple. Rational temperament (INTJ, INTP,
+  ENTJ, ENTP). Score displays and progress bars only.
+- **NF** (#d97706): Amber. Idealist temperament (INFJ, INFP,
+  ENFJ, ENFP). Score displays and progress bars only.
+- **SJ** (#059669): Emerald. Guardian temperament (ISTJ, ISFJ,
+  ESTJ, ESFJ). Score displays and progress bars only.
+- **SP** (#2563eb): Blue. Artisan temperament (ISTP, ISFP,
+  ESTP, ESFP). Score displays and progress bars only.
 
 ### Semantic
 - **Success** (#059669): Confirmation, positive states.
@@ -223,8 +226,8 @@ signals, separates, and guides — never decorates.
 **The One Voice Rule.** Abyssal Teal is the only accent.
 ≤10% of any screen. Second accent = design drift.
 
-**The Data-Only Rule.** Narcissus, Machiavellian, Psychopath
-colors appear only in score displays and progress bars.
+**The Data-Only Rule.** NT, NF, SJ, SP colors appear only
+in score displays, progress bars, and type badges.
 Never in navigation, buttons, or decorative elements.
 
 **The Warm Base Rule.** Surface is always #FCF9F6.
@@ -330,7 +333,7 @@ backgrounds and non-interactive containers only.
 - Headline: DM Serif Display, large, warm ink (#1a1917).
 - One word or phrase in Abyssal Teal (#0d7377).
 - Typographic decoration: oversized symbol or word at
-  3–5% opacity (e.g. "∅", "≈", "bayangan") — NOT illustration.
+  3–5% opacity (e.g. "∅", "≈", "tipe") — NOT illustration.
 - Subtle animated gradient shimmer on headline
   (CSS only, respects prefers-reduced-motion).
 - Two CTAs: primary teal + secondary ghost, side by side.
@@ -357,7 +360,7 @@ backgrounds and non-interactive containers only.
 
 ### Progress Bars
 - Height: 4px. Track: bord-light. Full-radius caps.
-- Fill: dimension color — no gradients.
+- Fill: temperament color — no gradients.
 - Transition: width 0.8s ease.
 
 ### Footer
@@ -390,7 +393,7 @@ backgrounds and non-interactive containers only.
 - Use tonal layering for section depth
 - Keep body text at inkMuted (#555550) — WCAG AA
 - Cap body line length at 65–75ch
-- Use Dark Triad colors exclusively for score data
+- Use temperament colors (NT, NF, SJ, SP) exclusively for score data
 - Respect prefers-reduced-motion on all animations
 - Pair color with shape/label for color blindness support
 
@@ -404,7 +407,7 @@ backgrounds and non-interactive containers only.
 - Don't use uppercase tracked eyebrows above headings
 - Don't use numbered section markers (01, 02, 03)
 - Don't use colored shadows or neon glows
-- Don't use Dark Triad colors outside score displays
+- Don't use temperament colors outside score displays
 - Don't gamify — no badges, achievements, celebrations
 - Don't use corporate wellness warmth or stock photos
 - Don't use border-radius larger than 16px on cards

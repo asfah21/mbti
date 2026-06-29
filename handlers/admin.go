@@ -60,14 +60,16 @@ func ShowDashboard(c *gin.Context) {
 	totalPendapatan := 0
 
 	type UserRow struct {
-		ID            string
-		Nama          string
-		Email         string
-		SudahBayar    bool
-		Narsisme      int
-		Machiavellian int
-		Psikopati     int
-		Dibuat        string
+		ID         string
+		Nama       string
+		Email      string
+		SudahBayar bool
+		MBTITipe   string
+		SkorEI     int
+		SkorSN     int
+		SkorTF     int
+		SkorJP     int
+		Dibuat     string
 	}
 
 	var rows []UserRow
@@ -80,14 +82,16 @@ func ShowDashboard(c *gin.Context) {
 			belumBayar++
 		}
 		rows = append(rows, UserRow{
-			ID:            u.ID,
-			Nama:          u.Nama,
-			Email:         u.Email,
-			SudahBayar:    isPaid,
-			Narsisme:      u.SkorNarsisme,
-			Machiavellian: u.SkorMachiavellian,
-			Psikopati:     u.SkorPsikopati,
-			Dibuat:        "-",
+			ID:         u.ID,
+			Nama:       u.Nama,
+			Email:      u.Email,
+			SudahBayar: isPaid,
+			MBTITipe:   u.MBTITipe,
+			SkorEI:     u.SkorEI,
+			SkorSN:     u.SkorSN,
+			SkorTF:     u.SkorTF,
+			SkorJP:     u.SkorJP,
+			Dibuat:     "-",
 		})
 	}
 
