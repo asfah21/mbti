@@ -5,7 +5,6 @@ import (
 
 	"ego/database"
 	"ego/handlers"
-	"ego/templates"
 
 	"github.com/gin-gonic/gin"
 )
@@ -18,8 +17,8 @@ func main() {
 	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
 
-	// Setup Templates & Static
-	templates.Setup(r)
+	// Setup Static Assets
+	r.Static("/assets", "./assets")
 
 	// Setup Routes
 	handlers.SetupRoutes(r)

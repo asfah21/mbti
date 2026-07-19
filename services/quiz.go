@@ -316,6 +316,31 @@ func GetPaywallData(id string) (*models.PaywallData, error) {
 // GetQuizResult — mengambil data hasil kuis (dengan proteksi paywall)
 // ──────────────────────────────────────────────────────────────
 
+func mapMBTIToDarkTriad(skorEI, skorSN, skorTF, skorJP int) (narsisme, machiavellian, psikopati int) {
+	// Map MBTI raw scores to Dark Triad percentile-like values (0-100)
+	// Use absolute values capped at a reasonable scale
+	narsisme = absInt(skorEI) * 5 // E/I dimension → Narsisme
+	if narsisme > 100 {
+		narsisme = 100
+	}
+	machiavellian = absInt(skorSN) * 5 // S/N dimension → Machiavellian
+	if machiavellian > 100 {
+		machiavellian = 100
+	}
+	psikopati = absInt(skorTF) * 5 // T/F dimension → Psikopati
+	if psikopati > 100 {
+		psikopati = 100
+	}
+	return
+}
+
+func absInt(x int) int {
+	if x < 0 {
+		return -x
+	}
+	return x
+}
+
 func GetQuizResult(id string) (*models.QuizResult, error) {
 	user, err := repositories.GetUserResult(id)
 	if err != nil {
@@ -335,6 +360,13 @@ func GetQuizResult(id string) (*models.QuizResult, error) {
 		"JP": buildDikotomiScore(float64(user.SkorJP), 0, float64(user.SkorJP), "J", "P"),
 	}
 
+	// Map MBTI raw scores to Dark Triad dimensions for narrative generation
+	narsisme, machiavellian, psikopati := mapMBTIToDarkTriad(user.SkorEI, user.SkorSN, user.SkorTF, user.SkorJP)
+
+	// Generate all narratives using the Dark Triad scoring system
+	execSummary, relProfile, kekuatan, areaPerhatian, relInsight, compatNotes, refQuestions :=
+		GenerateAllNarratives(user.Nama, narsisme, machiavellian, psikopati)
+
 	return &models.QuizResult{
 		Nama:                user.Nama,
 		MBTI:                user.MBTITipe,
@@ -344,13 +376,13 @@ func GetQuizResult(id string) (*models.QuizResult, error) {
 		SkorJP:              user.SkorJP,
 		Scores:              scores,
 		CognitiveStack:      DeriveCognitiveStack(user.MBTITipe),
-		ExecutiveSummary:    "Laporan MBTI akan segera tersedia.",
-		RelationshipProfile: "Profil hubungan berdasarkan MBTI akan segera tersedia.",
-		Kekuatan:            []string{"Kesadaran diri untuk mengikuti asesmen ini — langkah pertama menuju pengembangan diri."},
-		AreaPerhatian:       []string{"Pastikan untuk tidak terlalu terpaku pada label tipe MBTI — gunakan sebagai panduan, bukan batasan."},
-		RelationshipInsight: "Wawasan hubungan berdasarkan MBTI akan segera tersedia.",
-		CompatibilityNotes:  "Catatan kompatibilitas berdasarkan MBTI akan segera tersedia.",
-		ReflectionQuestions: []string{"Dari hasil asesmen ini, adakah satu preferensi yang paling kamu kenali dalam dirimu?"},
+		ExecutiveSummary:    execSummary,
+		RelationshipProfile: relProfile,
+		Kekuatan:            kekuatan,
+		AreaPerhatian:       areaPerhatian,
+		RelationshipInsight: relInsight,
+		CompatibilityNotes:  compatNotes,
+		ReflectionQuestions: refQuestions,
 	}, nil
 }
 

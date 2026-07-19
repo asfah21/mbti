@@ -3,7 +3,10 @@ package handlers
 import (
 	"net/http"
 
+	"ego/helpers"
 	"ego/services"
+	"ego/templ/pages"
+	"ego/templ/types"
 
 	"github.com/gin-gonic/gin"
 )
@@ -16,7 +19,7 @@ const (
 
 // ShowLogin menampilkan halaman login admin
 func ShowLogin(c *gin.Context) {
-	c.HTML(http.StatusOK, "login.html", nil)
+	helpers.Render(c, http.StatusOK, pages.LoginPage(""))
 }
 
 // LoginProcess memproses login admin
@@ -25,9 +28,7 @@ func LoginProcess(c *gin.Context) {
 	password := c.PostForm("password")
 
 	if username != adminUsername || password != adminPassword {
-		c.HTML(http.StatusOK, "login.html", gin.H{
-			"Error": "Username atau password salah",
-		})
+		helpers.Render(c, http.StatusOK, pages.LoginPage("Username atau password salah"))
 		return
 	}
 
@@ -47,9 +48,7 @@ func ShowDashboard(c *gin.Context) {
 
 	users, err := services.GetAllUsers()
 	if err != nil {
-		c.HTML(http.StatusInternalServerError, "error.html", gin.H{
-			"Message": "Gagal mengambil data pengguna.",
-		})
+		helpers.Render(c, http.StatusInternalServerError, pages.ErrorPage("Gagal mengambil data pengguna."))
 		return
 	}
 
@@ -59,20 +58,7 @@ func ShowDashboard(c *gin.Context) {
 	belumBayar := 0
 	totalPendapatan := 0
 
-	type UserRow struct {
-		ID         string
-		Nama       string
-		Email      string
-		SudahBayar bool
-		MBTITipe   string
-		SkorEI     int
-		SkorSN     int
-		SkorTF     int
-		SkorJP     int
-		Dibuat     string
-	}
-
-	var rows []UserRow
+	var rows []types.DashboardUserRow
 	for _, u := range users {
 		isPaid := u.StatusPembayaran == "paid"
 		if isPaid {
@@ -81,7 +67,7 @@ func ShowDashboard(c *gin.Context) {
 		} else {
 			belumBayar++
 		}
-		rows = append(rows, UserRow{
+		rows = append(rows, types.DashboardUserRow{
 			ID:         u.ID,
 			Nama:       u.Nama,
 			Email:      u.Email,
@@ -95,13 +81,15 @@ func ShowDashboard(c *gin.Context) {
 		})
 	}
 
-	c.HTML(http.StatusOK, "dashboard.html", gin.H{
-		"Users":           rows,
-		"TotalUser":       totalUser,
-		"SudahBayar":      sudahBayar,
-		"BelumBayar":      belumBayar,
-		"TotalPendapatan": totalPendapatan,
-	})
+	dashData := types.DashboardPageData{
+		Users:           rows,
+		TotalUser:       totalUser,
+		SudahBayar:      sudahBayar,
+		BelumBayar:      belumBayar,
+		TotalPendapatan: totalPendapatan,
+	}
+
+	helpers.Render(c, http.StatusOK, pages.DashboardPage(dashData))
 }
 
 // ShowUserDetail menampilkan detail user untuk admin
@@ -116,15 +104,11 @@ func ShowUserDetail(c *gin.Context) {
 	id := c.Param("id")
 	user, err := services.GetUserByID(id)
 	if err != nil {
-		c.HTML(http.StatusNotFound, "error.html", gin.H{
-			"Message": "User tidak ditemukan.",
-		})
+		helpers.Render(c, http.StatusNotFound, pages.ErrorPage("User tidak ditemukan."))
 		return
 	}
 
-	c.HTML(http.StatusOK, "user_detail.html", gin.H{
-		"User": user,
-	})
+	helpers.Render(c, http.StatusOK, pages.UserDetailPage(user))
 }
 
 // LogoutProcess menghapus session admin

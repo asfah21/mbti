@@ -3,7 +3,7 @@
 # ==========================================
 FROM golang:1.25-alpine AS builder
 
-# Install git dan ca-certificates (diperlukan untuk kirim email/webhook HTTPS)
+# Install git, ca-certificates, and templ CLI (diperlukan untuk kirim email/webhook HTTPS)
 RUN apk update && apk add --no-cache git ca-certificates && update-ca-certificates
 
 WORKDIR /app
@@ -12,11 +12,14 @@ WORKDIR /app
 COPY go.mod go.sum ./
 RUN go mod download
 
-# Copy seluruh source code (termasuk folder templates dan assets)
+# Install templ CLI
+RUN go install github.com/a-h/templ/cmd/templ@latest
+
+# Copy seluruh source code (termasuk folder assets)
 COPY . .
 
-# Kompilasi Go menjadi biner tunggal yang statis dan optimal untuk Linux
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-w -s" -o main .
+# Generate templ components, then compile Go menjadi biner tunggal
+RUN templ generate && CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-w -s" -o main .
 
 # ==========================================
 # STAGE 2: Runtime Environment
@@ -30,8 +33,7 @@ WORKDIR /root/
 # Copy biner hasil compile dari Stage 1
 COPY --from=builder /app/main .
 
-# COPY FOLDER STATIS
-COPY --from=builder /app/templates ./templates
+# COPY FOLDER STATIS (assets only — templates are compiled into the binary)
 COPY --from=builder /app/assets ./assets
 
 # Ekspos port sesuai aplikasi Gin (misal 8080)

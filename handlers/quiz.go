@@ -4,7 +4,11 @@ import (
 	"net/http"
 	"strconv"
 
+	"ego/helpers"
+	"ego/models"
 	"ego/services"
+	"ego/templ/pages"
+	"ego/templ/types"
 
 	"github.com/gin-gonic/gin"
 )
@@ -55,10 +59,7 @@ func ShowPaywall(c *gin.Context) {
 		return
 	}
 
-	c.HTML(http.StatusOK, "paywall.html", gin.H{
-		"ID":   data.ID,
-		"Nama": data.Nama,
-	})
+	helpers.Render(c, http.StatusOK, pages.PaywallPage(*data))
 }
 
 // ShowResult menampilkan hasil kuis (hanya jika sudah bayar)
@@ -75,23 +76,9 @@ func ShowResult(c *gin.Context) {
 		return
 	}
 
-	c.HTML(http.StatusOK, "hasil.html", gin.H{
-		"Nama":                result.Nama,
-		"MBTI":                result.MBTI,
-		"SkorEI":              result.SkorEI,
-		"SkorSN":              result.SkorSN,
-		"SkorTF":              result.SkorTF,
-		"SkorJP":              result.SkorJP,
-		"Scores":              result.Scores,
-		"CognitiveStack":      result.CognitiveStack,
-		"ExecutiveSummary":    result.ExecutiveSummary,
-		"RelationshipProfile": result.RelationshipProfile,
-		"Kekuatan":            result.Kekuatan,
-		"AreaPerhatian":       result.AreaPerhatian,
-		"RelationshipInsight": result.RelationshipInsight,
-		"CompatibilityNotes":  result.CompatibilityNotes,
-		"ReflectionQuestions": result.ReflectionQuestions,
-	})
+	// Convert models.QuizResult to types.HasilPageData
+	hasilData := quizResultToHasilData(result)
+	helpers.Render(c, http.StatusOK, pages.HasilPage(hasilData))
 }
 
 // KonfirmasiBayar memproses konfirmasi pembayaran dari user
@@ -120,4 +107,34 @@ func KonfirmasiBayar(c *gin.Context) {
 		"success": true,
 		"id":      id,
 	})
+}
+
+// quizResultToHasilData converts the service-layer QuizResult to the template data type.
+// Narrative fields are now populated by GetQuizResult via GenerateAllNarratives.
+func quizResultToHasilData(r *models.QuizResult) types.HasilPageData {
+	// Map MBTI raw scores to Dark Triad percentile display
+	narsisme := absInt(r.SkorEI)
+	machiavellian := absInt(r.SkorSN)
+	psikopati := absInt(r.SkorTF)
+
+	return types.HasilPageData{
+		Nama:                r.Nama,
+		Narsisme:            narsisme,
+		Machiavellian:       machiavellian,
+		Psikopati:           psikopati,
+		ExecutiveSummary:    r.ExecutiveSummary,
+		RelationshipProfile: r.RelationshipProfile,
+		Kekuatan:            r.Kekuatan,
+		AreaPerhatian:       r.AreaPerhatian,
+		RelationshipInsight: r.RelationshipInsight,
+		CompatibilityNotes:  r.CompatibilityNotes,
+		ReflectionQuestions: r.ReflectionQuestions,
+	}
+}
+
+func absInt(x int) int {
+	if x < 0 {
+		return -x
+	}
+	return x
 }

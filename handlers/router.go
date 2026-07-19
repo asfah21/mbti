@@ -3,6 +3,9 @@ package handlers
 import (
 	"net/http"
 
+	"ego/helpers"
+	"ego/templ/pages"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -12,9 +15,7 @@ func SetupRoutes(r *gin.Engine) {
 	r.Use(func(c *gin.Context) {
 		defer func() {
 			if err := recover(); err != nil {
-				c.HTML(http.StatusInternalServerError, "error.html", gin.H{
-					"Message": "Terjadi kesalahan pada server. Silakan coba lagi.",
-				})
+				helpers.Render(c, http.StatusInternalServerError, pages.ErrorPage("Terjadi kesalahan pada server. Silakan coba lagi."))
 				c.Abort()
 			}
 		}()
