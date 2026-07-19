@@ -1,26 +1,26 @@
 ---
-name: MBTI
-description: MBTI personality assessment — 16 types, 4 dichotomies, Jungian cognitive functions
+name: IQ Test
+description: IQ & cognitive assessment — intelligence metrics, aptitude scoring, performance analytics
 colors:
-  primary: "#0d7377"
-  primary-hover: "#095b5e"
-  primary-light: "#e8f3f4"
-  primary-border: "#c5e0e2"
-  ink: "#1a1917"
-  ink-muted: "#555550"
-  ink-subtle: "#999990"
-  bord: "#e0dcd6"
-  bord-light: "#ede9e3"
-  surface: "#FCF9F6"
-  bg: "#f0ede8"
-  bg-alt: "#e8e4de"
-  nt: "#7c3aed"
-  nf: "#d97706"
-  sj: "#059669"
-  sp: "#2563eb"
-  success: "#059669"
-  warning: "#d97706"
-  error: "#dc2626"
+  primary: "#6366f1"
+  primary-hover: "#4f46e5"
+  primary-light: "#eef2ff"
+  primary-border: "#c7d2fe"
+  ink: "#0f172a"
+  ink-muted: "#475569"
+  ink-subtle: "#94a3b8"
+  bord: "#e2e8f0"
+  bord-light: "#f1f5f9"
+  surface: "#ffffff"
+  bg: "#f8fafc"
+  bg-alt: "#f1f5f9"
+  iq-low: "#f59e0b"
+  iq-average: "#10b981"
+  iq-high: "#6366f1"
+  iq-superior: "#8b5cf6"
+  success: "#10b981"
+  warning: "#f59e0b"
+  error: "#ef4444"
 typography:
   display:
     fontFamily: "DM Serif Display, Georgia, serif"
@@ -77,13 +77,13 @@ spacing:
   "6xl": "128px"
 elevation:
   level-1:
-    boxShadow: "0 1px 3px rgba(26,25,23,0.06), 0 4px 12px rgba(26,25,23,0.04)"
-    border: "1px solid #ede9e3"
+    boxShadow: "0 1px 2px rgba(15,23,42,0.04), 0 4px 12px rgba(15,23,42,0.06)"
+    border: "1px solid #f1f5f9"
   level-2:
-    boxShadow: "0 4px 16px rgba(26,25,23,0.08), 0 12px 40px rgba(26,25,23,0.06)"
+    boxShadow: "0 4px 16px rgba(15,23,42,0.08), 0 12px 40px rgba(15,23,42,0.06)"
   navbar-scroll:
-    boxShadow: "0 1px 12px rgba(26,25,23,0.06)"
-    background: "rgba(252,249,246,0.85)"
+    boxShadow: "0 1px 12px rgba(15,23,42,0.06)"
+    background: "rgba(255,255,255,0.85)"
     backdropFilter: "blur(16px)"
 components:
   button-primary:
@@ -130,7 +130,7 @@ components:
     border: "none"
   card-hover:
     border: "1px solid {colors.bord}"
-    boxShadow: "0 4px 16px rgba(26,25,23,0.08)"
+    boxShadow: "0 4px 16px rgba(15,23,42,0.08)"
     transition: "all 0.2s ease"
   input-field:
     backgroundColor: "{colors.surface}"
@@ -147,106 +147,105 @@ components:
   progress-bar:
     backgroundColor: "{colors.bord-light}"
     rounded: "{rounded.full}"
-    height: "4px"
+    height: "6px"
   progress-fill:
     rounded: "{rounded.full}"
     height: "100%"
-    transition: "width 0.8s ease"
+    transition: "width 0.6s cubic-bezier(0.4, 0, 0.2, 1)"
 ---
 
-# Design System: MBTI
+# Design System: IQ Test
 
 ## 1. Overview
 
-**Creative North Star: "Know Your Architecture"**
+**Creative North Star: "Measure Your Potential"**
 
-MBTI's visual system is a mirror for self-discovery — it
-doesn't judge, it reveals. The interface creates space for
-introspection and understanding, not distraction. Every pixel
-serves clarity and psychological depth.
+IQ Test's visual system is a gateway to self-discovery — it
+feels sharp, confident, and energizing. The interface creates
+a sense of challenge and achievement, not anxiety. Every pixel
+serves clarity and cognitive engagement.
 
-The system is **refined and confident**: modern enough to
-feel premium, restrained enough to feel serious. Subtle
-elevation and warm tones signal quality without overwhelming
-the psychological weight of the content.
+The system is **bright and vibrant**: modern indigo accents
+on a clean white base create a crisp, professional feel.
+Generous spacing and subtle elevation signal quality.
+The palette is optimistic — blues and purples evoke
+intelligence, growth, and clarity.
 
 **Key Characteristics:**
-- Warm off-white base — never pure white or pure black
-- Intentional elevation — three levels, warm-toned shadows
-- Editorial serif for display, clean sans for body
-- One accent (Abyssal Teal), ≤10% per screen
-- Modern but grounded — not a SaaS dashboard, not a quiz app
+- Clean white base — pure, minimal, focused
+- Indigo primary (#6366f1) — intelligence, trust, energy
+- Brighter neutrals — slate-based for clarity
+- Vibrant data colors — amber, emerald, indigo, violet
+- Multiple accent usage allowed — IQ bands need range
+- Modern and crisp — like a premium assessment platform
 
 ## 2. Colors
 
-The palette is intentionally narrow. One accent carries the
-emotional weight; warm neutrals provide structure. Color
-signals, separates, and guides — never decorates.
-
 ### Primary
-- **Abyssal Teal** (#0d7377): The single accent. Interactive
+- **IQ Indigo** (#6366f1): The primary accent. Interactive
   elements, focus rings, active states, data highlights,
-  brand mark. ≤10% of any screen. Rarity is the point.
-- **Abyssal Teal Hover** (#095b5e): Darkened for hover states.
-- **Abyssal Teal Light** (#e8f3f4): Subtle backgrounds,
+  brand mark. Bold and confident.
+- **IQ Indigo Hover** (#4f46e5): Darkened for hover states.
+- **IQ Indigo Light** (#eef2ff): Subtle backgrounds,
   badge fills, icon containers.
-- **Abyssal Teal Border** (#c5e0e2): Bordered containers
+- **IQ Indigo Border** (#c7d2fe): Bordered containers
   needing a hint of brand.
 
-### Neutral (Warm)
-- **Ink** (#1a1917): Primary text. Warm near-black, not
-  pure black — grounded, not harsh.
-- **Ink Muted** (#555550): Secondary text, body copy.
+### Neutral (Clean)
+- **Ink** (#0f172a): Primary text. Slate near-black —
+  sharp, authoritative.
+- **Ink Muted** (#475569): Secondary text, body copy.
   WCAG AA 4.5:1 against surface.
-- **Ink Subtle** (#999990): Placeholders, metadata, captions.
+- **Ink Subtle** (#94a3b8): Placeholders, metadata, captions.
   WCAG AA 4.5:1 against surface.
-- **Bord** (#e0dcd6): Standard borders, dividers. Warm gray.
-- **Bord Light** (#ede9e3): Subtle borders, card outlines.
-- **Surface** (#FCF9F6): Primary background. Warm off-white.
-- **Bg** (#f0ede8): Section alternation, flat card backgrounds.
-- **Bg Alt** (#e8e4de): Deeper alternation, subtle fills.
+- **Bord** (#e2e8f0): Standard borders, dividers. Clean slate.
+- **Bord Light** (#f1f5f9): Subtle borders, card outlines.
+- **Surface** (#ffffff): Primary background. Pure white —
+  crisp, focused, modern.
+- **Bg** (#f8fafc): Section alternation, flat card backgrounds.
+- **Bg Alt** (#f1f5f9): Deeper alternation, subtle fills.
 
-### Data (Temperament Groups)
-- **NT** (#7c3aed): Purple. Rational temperament (INTJ, INTP,
-  ENTJ, ENTP). Score displays and progress bars only.
-- **NF** (#d97706): Amber. Idealist temperament (INFJ, INFP,
-  ENFJ, ENFP). Score displays and progress bars only.
-- **SJ** (#059669): Emerald. Guardian temperament (ISTJ, ISFJ,
-  ESTJ, ESFJ). Score displays and progress bars only.
-- **SP** (#2563eb): Blue. Artisan temperament (ISTP, ISFP,
-  ESTP, ESFP). Score displays and progress bars only.
+### Data (IQ Score Bands)
+- **IQ Low** (#f59e0b): Amber. Scores below 85.
+  Used in score displays and progress bars only.
+- **IQ Average** (#10b981): Emerald. Scores 85–115.
+  Used in score displays and progress bars only.
+- **IQ High** (#6366f1): Indigo. Scores 115–130.
+  Used in score displays and progress bars only.
+- **IQ Superior** (#8b5cf6): Violet. Scores above 130.
+  Used in score displays and progress bars only.
 
 ### Semantic
-- **Success** (#059669): Confirmation, positive states.
-- **Warning** (#d97706): Cautionary indicators.
-- **Error** (#dc2626): Error states, destructive actions.
+- **Success** (#10b981): Confirmation, positive states.
+- **Warning** (#f59e0b): Cautionary indicators.
+- **Error** (#ef4444): Error states, destructive actions.
 
 ### Named Rules
 
-**The One Voice Rule.** Abyssal Teal is the only accent.
-≤10% of any screen. Second accent = design drift.
+**The Intentional Accent Rule.** IQ Indigo is the primary
+accent for interactive elements. IQ band colors (Amber,
+Emerald, Indigo, Violet) are exclusive to score displays
+and progress bars. Never mix in navigation or CTAs.
 
-**The Data-Only Rule.** NT, NF, SJ, SP colors appear only
-in score displays, progress bars, and type badges.
-Never in navigation, buttons, or decorative elements.
+**The Clean Base Rule.** Surface is always #ffffff.
+Off-white (#f8fafc) for section alternation only.
+No warm undertones — this is a precision instrument,
+not a cozy corner.
 
-**The Warm Base Rule.** Surface is always #FCF9F6.
-Never pure white (#ffffff) or pure black (#000000).
-All neutrals carry a warm undertone.
-
-**The Warm Shadow Rule.** Shadows use warm ink tone
-(#1a1917), never pure black. Opacity stays below 0.10
-— shadows suggest, they don't announce.
+**The Modern Shadow Rule.** Shadows use slate ink tone
+(#0f172a), never pure black. Opacity stays below 0.08
+— shadows suggest depth, they don't announce it.
 
 ## 3. Typography
 
 **Display/Headline:** DM Serif Display — editorial gravity,
-psychological weight. Carries the emotional tone of the brand.
+intellectual weight. Used sparingly for impact.
 
-**Body/UI:** Inter — recedes into quiet readability.
-Does not compete with the serif.
+**Body/UI:** Inter — clean, sharp, highly readable.
+Recedes into comfortable readability.
 
-**Mono:** JetBrains Mono — for scores, data, percentages.
+**Mono:** JetBrains Mono — for scores, percentiles,
+and data points where precision matters.
 
 ### Hierarchy
 - **Display** (DM Serif Display, 400, clamp(2.25rem, 5vw,
@@ -259,7 +258,7 @@ Does not compete with the serif.
   Max 65–75ch. text-wrap: pretty.
 - **Label** (Inter, 500, 0.875rem, 1.5): Buttons, nav, labels.
 - **Mono** (JetBrains Mono, 600, 0.875rem, 1.5): Score values,
-  percentages, data points.
+  percentiles, data points.
 
 ### Named Rules
 
@@ -277,26 +276,26 @@ Three levels of intentional depth. Used to indicate
 interactivity and layering — never decoration.
 
 **Level 0 — Flat:** Page background, section containers.
-No shadow, no border. Base surface (#FCF9F6).
+No shadow, no border. Base surface (#ffffff).
 
 **Level 1 — Raised:** Cards, input fields.
-box-shadow: 0 1px 3px rgba(26,25,23,0.06),
-0 4px 12px rgba(26,25,23,0.04);
-border: 1px solid #ede9e3;
+box-shadow: 0 1px 2px rgba(15,23,42,0.04),
+0 4px 12px rgba(15,23,42,0.06);
+border: 1px solid #f1f5f9;
 
 **Level 2 — Floating:** Dropdowns, tooltips, modals.
-box-shadow: 0 4px 16px rgba(26,25,23,0.08),
-0 12px 40px rgba(26,25,23,0.06);
+box-shadow: 0 4px 16px rgba(15,23,42,0.08),
+0 12px 40px rgba(15,23,42,0.06);
 
 **Navbar on scroll:**
-background: rgba(252,249,246,0.85);
+background: rgba(255,255,255,0.85);
 backdrop-filter: blur(16px);
-box-shadow: 0 1px 12px rgba(26,25,23,0.06);
+box-shadow: 0 1px 12px rgba(15,23,42,0.06);
 
 ### Named Rules
 
 **The Intentional Elevation Rule.** Three levels only.
-Warm-toned, low opacity, purposeful. No colored shadows,
+Cool-toned, low opacity, purposeful. No colored shadows,
 no neon glows, no material-design-style hard shadows.
 
 **The No-Pure-Flat Rule.** Cards and interactive surfaces
@@ -306,21 +305,21 @@ backgrounds and non-interactive containers only.
 ## 5. Components
 
 ### Buttons
-- **Primary:** Abyssal Teal (#0d7377) background, white text,
+- **Primary:** IQ Indigo (#6366f1) background, white text,
   8px radius, 12px 28px padding.
-  Hover: #095b5e. Transition: background 0.2s ease.
-  Focus: 2px teal outline, 2px offset. No shadow, no glow.
+  Hover: #4f46e5. Transition: background 0.2s ease.
+  Focus: 2px indigo outline, 2px offset. No shadow, no glow.
 - **Secondary:** Transparent, inkMuted text, 1px bord border.
   Hover: border → ink, text → ink.
 - **Ghost:** Transparent, inkMuted text, 8px 16px padding.
   Hover: bg background, ink text.
 
 ### Navbar
-- **Default:** background #FCF9F6, 1px bord-light bottom border.
+- **Default:** background #ffffff, 1px bord-light bottom border.
   No blur, no shadow.
-- **On scroll:** background rgba(252,249,246,0.85),
+- **On scroll:** background rgba(255,255,255,0.85),
   backdrop-filter blur(16px),
-  box-shadow 0 1px 12px rgba(26,25,23,0.06).
+  box-shadow 0 1px 12px rgba(15,23,42,0.06).
 - Transition: all 0.3s ease on scroll trigger.
 - Height: 56–64px max. Slim, invisible when possible.
 - Layout: logo left, nav links center, CTA button right.
@@ -329,42 +328,42 @@ backgrounds and non-interactive containers only.
   if reduced motion enabled.
 
 ### Hero
-- Background: #FCF9F6 — always light, never dark.
-- Headline: DM Serif Display, large, warm ink (#1a1917).
-- One word or phrase in Abyssal Teal (#0d7377).
+- Background: #ffffff — always light, never dark.
+- Headline: DM Serif Display, large, ink (#0f172a).
+- One word or phrase in IQ Indigo (#6366f1).
 - Typographic decoration: oversized symbol or word at
-  3–5% opacity (e.g. "∅", "≈", "tipe") — NOT illustration.
+  3–5% opacity (e.g. "IQ", "Σ", "≥") — NOT illustration.
 - Subtle animated gradient shimmer on headline
   (CSS only, respects prefers-reduced-motion).
-- Two CTAs: primary teal + secondary ghost, side by side.
-- Trust pills below CTAs: "Anonim" · "Gratis" · "Hasil Instan"
+- Two CTAs: primary indigo + secondary ghost, side by side.
+- Trust pills below CTAs: "Anonim" · "Gratis" · "5 Menit"
 - NO photos, NO Lottie, NO SVG illustrations, NO dark hero.
 
 ### Cards
-- Background: surface (#FCF9F6).
-- Border: 1px solid bord-light (#ede9e3).
+- Background: surface (#ffffff).
+- Border: 1px solid bord-light (#f1f5f9).
 - Shadow: Level 1 elevation.
 - Radius: 12px (rounded.md).
 - Padding: 24–32px.
-- Hover: border → bord (#e0dcd6),
-  shadow → 0 4px 16px rgba(26,25,23,0.08).
+- Hover: border → bord (#e2e8f0),
+  shadow → 0 4px 16px rgba(15,23,42,0.08).
   Transition: all 0.2s ease.
 
 ### Inputs
-- Border: 1px solid bord (#e0dcd6).
-- Background: surface (#FCF9F6).
+- Border: 1px solid bord (#e2e8f0).
+- Background: surface (#ffffff).
 - Radius: 8px. Padding: 12px 16px.
-- Focus: border → primary (#0d7377). No glow.
-- Placeholder: inkSubtle (#999990) — WCAG AA.
-- Error: border → error (#dc2626).
+- Focus: border → primary (#6366f1). No glow.
+- Placeholder: inkSubtle (#94a3b8) — WCAG AA.
+- Error: border → error (#ef4444).
 
 ### Progress Bars
-- Height: 4px. Track: bord-light. Full-radius caps.
-- Fill: temperament color — no gradients.
-- Transition: width 0.8s ease.
+- Height: 6px. Track: bord-light. Full-radius caps.
+- Fill: IQ band color — no gradients.
+- Transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1).
 
 ### Footer
-- Background: bg (#f0ede8) — slightly deeper than surface.
+- Background: bg (#f8fafc) — slightly deeper than surface.
 - Top border: 1px solid bord-light only.
 - No dark inversion, no color change.
 - Layout: logo + tagline left, 2–3 link columns right.
@@ -379,36 +378,37 @@ backgrounds and non-interactive containers only.
 - Color blindness: never use color as sole differentiator.
   Always pair with shape, label, or position.
 - ARIA labels on all interactive elements.
-- Focus-visible: 2px teal outline, 2px offset on all
+- Focus-visible: 2px indigo outline, 2px offset on all
   interactive elements.
 
 ## 7. Do's and Don'ts
 
 ### Do:
-- Use Abyssal Teal sparingly — ≤10% per screen
-- Use warm off-white (#FCF9F6) as base — never pure white
+- Use IQ Indigo (#6366f1) as the primary accent
+- Use pure white (#ffffff) as base — crisp and modern
 - Use DM Serif Display for hero and section headlines
 - Use Level 1 elevation on cards — not fully flat
 - Use glass navbar effect on scroll
 - Use tonal layering for section depth
-- Keep body text at inkMuted (#555550) — WCAG AA
+- Keep body text at inkMuted (#475569) — WCAG AA
 - Cap body line length at 65–75ch
-- Use temperament colors (NT, NF, SJ, SP) exclusively for score data
+- Use IQ band colors (Amber, Emerald, Indigo, Violet) exclusively for score data
 - Respect prefers-reduced-motion on all animations
 - Pair color with shape/label for color blindness support
+- Use slate-based neutrals for a clean, professional feel
 
 ### Don't:
-- Don't use pure white (#ffffff) or pure black (#000000)
+- Don't use pure black (#000000) — use ink (#0f172a)
 - Don't use Inter for display or headline — use DM Serif Display
-- Don't use black/ink for primary button — use teal
+- Don't use black/ink for primary button — use indigo
 - Don't use gradients — backgrounds, text, or buttons
 - Don't use glassmorphism outside navbar scroll state
 - Don't use illustrations, Lottie, or SVG sketches
 - Don't use uppercase tracked eyebrows above headings
 - Don't use numbered section markers (01, 02, 03)
 - Don't use colored shadows or neon glows
-- Don't use temperament colors outside score displays
+- Don't use IQ band colors outside score displays
 - Don't gamify — no badges, achievements, celebrations
-- Don't use corporate wellness warmth or stock photos
+- Don't use warm neutrals — this is a precision tool, not cozy
 - Don't use border-radius larger than 16px on cards
 - Don't pair border + heavy shadow on the same element
